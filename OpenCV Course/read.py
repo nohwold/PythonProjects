@@ -4,14 +4,33 @@ import cv2 as cv
 
 # cv.imshow("Cat", img)
 
-#Reading videos
-# capture = cv.VideoCapture('Videos/dog.mp4')
+def rescaleFrame(frame, scale = 0.75):
+    # Works for images, vdieos, and live video
+    width = int(frame.shape[1]*scale)
+    height = int(frame.shape[0]*scale)
+    dimensions = (width, height)
 
-# while True:
-#     isTrue, frame = capture.read()
-#     cv.imshow("Video", frame)
-#     if cv.waitKey(20) & 0xFF==ord('d'):
-#         break
+    return cv.resize(frame, dimensions, interpolation=cv.INTER_AREA)
 
-# capture.release()
-# cv.destroyAllWindows()
+# resized_image = rescaleFrame(img)
+# cv.imshow('Image', resized_image)
+
+def changeRes(width, height):
+    #Only works for live video
+    capture.set(3, width)
+    capture.set(4, height)
+
+capture = cv.VideoCapture('Videos/dog.mp4')
+
+while True:
+    isTrue, frame = capture.read()
+
+    frame_resized = rescaleFrame(frame, 0.20)
+    cv.imshow("Video", frame)
+    cv.imshow("Video fresized", frame_resized)
+
+    if cv.waitKey(20) & 0xFF==ord('d'):
+        break
+
+capture.release()
+cv.destroyAllWindows()
